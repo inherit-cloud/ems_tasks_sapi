@@ -1,0 +1,5 @@
+%dw 2.0
+
+type auto_4b69b797_3b56_4b85_9e49_a65d7122841e_Input_Payload = Array<{|  task_id: Number,   employee_id: Number,   task_description: String,   status: String,   priority: String,   created_at: String,   updated_at: String|}> {"mediaType": "application/json",
+"encoding": "UTF-8"}
+
