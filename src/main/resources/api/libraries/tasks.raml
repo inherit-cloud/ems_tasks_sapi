@@ -1,0 +1,80 @@
+#%RAML 1.0 Library
+
+types:
+  task:
+    type: object
+    properties:
+      task_id:
+        type: integer
+        description: Unique identifier for the task
+      
+      employee_id:
+        type: integer
+        description: Identifier for the employee assigned to the task
+      
+      task_description:
+        type: string
+        description: Description of the task
+      
+      status:
+        type: string
+        enum: [Pending, In Progress, Completed]
+        default: Pending
+        description: Current status of the task
+      
+      priority:
+        type: string
+        enum: [Low, Medium, High]
+        default: Medium
+        description: Priority level of the task
+      
+      created_at:
+        type: string
+        description: Timestamp when the task was created
+      
+      updated_at:
+        type: string
+        description: Timestamp when the task was last updated
+
+  taskCollection:
+    type: array
+    items: task
+
+  new_item_post_req:
+    type: object 
+    properties:
+      employee_id:
+        type: integer
+        description: Identifier for the employee assigned to the task
+      
+      task_description:
+        type: string
+        description: Description of the task
+      
+      status:
+        type: string
+        enum: [Pending, In Progress, Completed]
+        default: Pending
+        description: Current status of the task
+        required: false
+
+      priority:
+        type: string
+        enum: [Low, Medium, High]
+        default: Medium
+        description: Priority level of the task
+        required: false
+  
+  task_post_res:
+    type: object 
+    properties:
+      task_id:
+        type: integer
+        description: Unique identifier for the task
+
+
+
+      
+
+
+

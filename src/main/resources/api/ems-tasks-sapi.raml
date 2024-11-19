@@ -1,0 +1,85 @@
+#%RAML 1.0
+title: ems-tasks-sapi
+
+protocols: [HTTP,HTTPS]
+version: v1
+mediaType: 
+- application/json
+
+
+uses:
+  task: /libraries/tasks.raml
+  task_comments: /libraries/task_comments.raml
+
+
+resourceTypes:
+  task_collection: !include /resourceTypes/collection.raml
+
+
+
+
+/tasks:
+  type:
+    task_collection:
+      get-response-schema: task.taskCollection
+      get-response-example: !include /examples/task_collection.json
+  
+  get: 
+
+
+/task:
+  type:
+    task_collection:
+      post-request-schema: task.new_item_post_req
+      post-request-example: !include /examples/new_task.json
+      post-response-schema: task.task_post_res
+      post-response-example: !include /examples/new_task_res.json
+  
+  post:
+  
+  /{id}:
+    type:
+      task_collection:
+        get-response-schema: task.task
+        get-response-example: !include /examples/task.json
+
+        put-request-schema:  task.new_item_post_req
+        put-request-example:  !include /examples/new_task.json
+        put-response-schema: task.task_post_res
+        put-response-example: !include /examples/new_task_res.json
+    
+
+    get:
+    
+    put:
+      
+    delete:
+
+/task_comments:
+ type:
+   task_collection:
+     get-response-schema: task_comments.get_task_comments_response
+     get-response-example: !include /examples/response/getTaskCommentsResponseExample.json
+     post-request-schema: task_comments.post_task_comments_request
+     post-request-example: !include /examples/request/postTaskCommentsRequestExample.json
+     post-response-schema: task_comments.post_task_comments_response
+     post-response-example: !include /examples/response/postTaskCommentsResponseExample.json
+
+ get:
+ post:
+
+ /{id}:
+   type:
+    task_collection:
+     get-response-schema: task_comments.get_task_comments_response
+     get-response-example: !include /examples/response/getTaskCommentsByIdResponseExample.json
+     put-request-schema: task_comments.post_task_comments_request
+     put-request-example: !include /examples/request/postTaskCommentsRequestExample.json
+     put-response-schema: task_comments.post_task_comments_response
+     put-response-example: !include /examples/response/postTaskCommentsResponseExample.json
+   get:
+   put:
+   delete:
+     
+
+      

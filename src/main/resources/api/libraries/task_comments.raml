@@ -1,0 +1,39 @@
+#%RAML 1.0 Library
+types:
+  get_task_comments_response:
+    type: array
+    items:
+      properties:
+       comment_id:
+         type: integer
+         description: Unique identifier for the task comment id
+       task_id:
+        type: integer
+        description: Unique identifier for the task
+       comment_text:
+        type: string
+        description: description of the comment
+       created_at:
+        type: string
+        description: Timestamp when the task was created
+
+
+  post_task_comments_request:
+    type: object
+    properties:
+      task_id:
+        type: integer
+        description: Unique identifier for the task
+      comment_text:
+        type: string
+        description: description of the comment
+      created_at:
+        type: string
+        description: Timestamp when the task was created
+
+  post_task_comments_response:
+    type: object 
+    properties:
+      comment_id:
+        type: integer
+        description: Unique identifier for the task

@@ -1,0 +1,52 @@
+#%RAML 1.0 ResourceType
+
+get?:
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<get-response-schema>>
+          example: <<get-response-example>>
+
+
+post?:
+  body:
+    application/json:
+      type: <<post-request-schema>>
+      example: <<post-request-example>>
+
+  responses:
+    201:
+      body:
+        application/json:
+          type: <<post-response-schema>>
+          example: <<post-response-example>>
+
+
+put?:
+  body:
+    application/json:
+      type: <<put-request-schema>>
+      example: <<put-request-example>>
+
+  responses:
+    200:
+      body:
+        application/json:
+          type: <<put-response-schema>>
+          example: <<put-response-example>>
+
+
+
+delete?:
+  responses:
+    200:
+      body:
+        application/json:
+          example: {
+            message: "deleted record successfully"
+          }
+
+
+        
+        
