@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get_task_by_id" doc:id="b9795f07-0260-41e8-9a92-0fff0d470cd5" >
+		<db:select doc:name="filter task by id" doc:id="5eccd29c-1c78-4559-a1b6-ce9e56696692" config-ref="Database_Config">
+			<db:sql ><![CDATA[SELECT * from Tasks where task_id = :id;	]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	id: vars.id
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="0ba09da6-bd05-4b0d-aea1-e97f58925c0c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get_all_tasks" doc:id="4b69b797-3b56-4b85-9e49-a65d7122841e" >
+		<db:select doc:name="filter task by id" doc:id="58226c12-04f3-4bf1-b2e1-4042a3f39118" config-ref="Database_Config">
+			<db:sql><![CDATA[SELECT * from Tasks;]]></db:sql>
+			<db:input-parameters><![CDATA[#[{
+	id: vars.id
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="7e182328-4b74-4fdb-90a4-ec501335794a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="new_task" doc:id="21facd44-81a0-4d22-a060-7704b5378e08" >
+		<logger level="INFO" doc:name="Logger" doc:id="d9d1304f-1927-4fc0-88f0-fd48a1545104" message="#[payload]"/>
+		<db:insert doc:name="Insert" doc:id="0803f26a-a4f5-46ee-ab6f-eb013d22dc37" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO Tasks(employee_id, task_description, status, priority) VALUES (:employee_id, :task_description, :status, :priority);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[payload]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="Transform Message" doc:id="02baf88a-3c9a-4fd4-826a-83cc8c24430e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="ad21bb96-4b2d-4ad8-a0c5-04fcbf8430c5" type="DB:QUERY_EXECUTION">
+				<set-variable value="409" doc:name="Set Variable" doc:id="72063d36-f2d7-4594-960a-093e1716e6a1" variableName="httpStatus"/>
+				<ee:transform doc:name="Transform Message" doc:id="49625b08-7605-4e62-9de4-39a341937b56" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+error]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
