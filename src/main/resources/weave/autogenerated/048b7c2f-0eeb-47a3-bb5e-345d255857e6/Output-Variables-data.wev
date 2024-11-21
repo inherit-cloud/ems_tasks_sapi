@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_048b7c2f_0eeb_47a3_bb5e_345d255857e6_Output_Variables_data = Array<{|  task_id: Number,   employee_id?: Number,   task_description: Any,   status?: String,   priority?: String,   created_at?: Date,   updated_at?: Date|}>
+
