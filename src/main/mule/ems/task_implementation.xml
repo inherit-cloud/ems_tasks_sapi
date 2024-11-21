@@ -5,6 +5,48 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<flow name="update_task_implementation_flow" doc:id="b2963de6-d0f5-4abc-a1af-30ccadaa5b76" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="f6dd9a57-530f-40f7-adb3-b9a3ad0c2739" message='#["update_task_implementation_flow started at " ++ now()]'/>
+		<db:select doc:name="Select" doc:id="8bbfacf7-a61c-4b4e-8698-8f62857c8248" config-ref="Database_Config" target="data">
+			<db:sql ><![CDATA[SELECT * FROM Tasks WHERE task_id=:id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"id": vars.id
+}]]]></db:input-parameters>
+		</db:select>
+		<db:update doc:name="Update" doc:id="21d57628-d077-4c64-8483-bbd47b69a122" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE Tasks
+SET employee_id=:employee_id, task_description=:task_description, status=:status, priority=:priority
+WHERE task_id=:id;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"id": vars.id,
+	"employee_id": if(vars.input_data.employee_id != null) vars.input_data.employee_id else vars.data.employee_id[0],
+     "task_description": if(vars.input_data.task_description != null) vars.input_data.task_description else vars.data.task_description[0],
+      "status": if(vars.input_data.status != null) vars.input_data.status else vars.data.status[0] ,
+       "priority": if(vars.input_data.priority != null) vars.input_data.priority else vars.data.priority[0]
+      }]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="803cdb21-f4dd-4d55-8466-78bfab5205bd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+vars.input_data]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="d65dff0c-5bea-4c9b-b530-b606f062bd52" message='#["update_task_implementation_flow ended at " ++ now()]'/>
+	</flow>
+	<flow name="delete_task_implementation_flow" doc:id="e812d1aa-691c-4078-9c27-40e8fa446937" >
+		<logger level="INFO" doc:name="Start Logger" doc:id="46087f3a-8bf7-4d42-ad72-4b738880024b" message='#["delete_task_implementation_flow started at " ++ now()]' />
+		<db:delete doc:name="Delete" doc:id="501cd52c-1da6-42f0-b14b-5da70af12e32" config-ref="Database_Config">
+			<db:sql ><![CDATA[DELETE FROM Tasks
+WHERE task_id=:id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	id: vars.id
+}]]]></db:input-parameters>
+		</db:delete>
+		<ee:transform doc:name="Transform Message" doc:id="13b892d3-036f-4bc4-b04a-a51ec78e1464" >
+
 	<flow name="get_task_by_id" doc:id="b9795f07-0260-41e8-9a92-0fff0d470cd5" >
 		<db:select doc:name="filter task by id" doc:id="5eccd29c-1c78-4559-a1b6-ce9e56696692" config-ref="Database_Config">
 			<db:sql ><![CDATA[SELECT * from Tasks where task_id = :id;	]]></db:sql>
@@ -29,10 +71,19 @@ payload]]></ee:set-payload>
 }]]]></db:input-parameters>
 		</db:select>
 		<ee:transform doc:name="Transform Message" doc:id="7e182328-4b74-4fdb-90a4-ec501335794a" >
+
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
+
+{
+  message: "deleted record successfully"
+} ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End Logger" doc:id="d91241b7-1b2b-4c03-881c-5c3234af4232" message='#["delete_task_implementation_flow ended at " ++ now()]' />
+
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
@@ -64,5 +115,6 @@ error]]></ee:set-payload>
 				</ee:transform>
 			</on-error-continue>
 		</error-handler>
+
 	</flow>
 </mule>

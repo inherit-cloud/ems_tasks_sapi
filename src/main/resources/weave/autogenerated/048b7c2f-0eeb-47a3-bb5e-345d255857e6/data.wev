@@ -1,0 +1,10 @@
+%dw 2.0
+
+type auto_048b7c2f_0eeb_47a3_bb5e_345d255857e6_Output_Variables_input_data = {
+  task_description: String, 
+  employee_id: Number, 
+  priority?: "High" | "Low" | "Medium", 
+  status?: "Completed" | "In Progress" | "Pending", 
+  _?: Any
+}
+
