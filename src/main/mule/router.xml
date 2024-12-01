@@ -44,36 +44,26 @@ output application/json
     <flow name="put:\task_comments\(id):application\json:ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
             <ee:variables>
-                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
+                <ee:set-variable variableName="id"><![CDATA[attributes.uriParams.'id']]></ee:set-variable>
+				<ee:set-variable variableName="input_data" ><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  comment_id: 101
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
+payload]]></ee:set-variable>
+            </ee:variables>
         </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="2d681f6a-b774-4c61-bc24-1db1cae22a29" name="update_task_comments_implementation_flow"/>
     </flow>
     <flow name="put:\task\(id):application\json:ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
             <ee:variables>
-                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
-            </ee:variables>
-        </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
+                <ee:set-variable variableName="id"><![CDATA[attributes.uriParams.'id']]></ee:set-variable>
+				<ee:set-variable variableName="input_data" ><![CDATA[%dw 2.0
 output application/json
 ---
-{
-  task_id: 3
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
+payload]]></ee:set-variable>
+            </ee:variables>
         </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="b9bd56ec-ab0d-4531-bae9-f9014a8bb30a" name="update_task_implementation_flow"/>
     </flow>
     <flow name="delete:\task\(id):ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
@@ -81,16 +71,7 @@ output application/json
                 <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  message: "deleted record successfully"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="f28a1b45-9f52-4cd2-bd56-782e48ab08e9" name="delete_task_implementation_flow"/>
     </flow>
     <flow name="delete:\task_comments\(id):ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
@@ -139,11 +120,11 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="get:\tasks:ems-tasks-sapi-config">
-        <ee:transform doc:name="Transform Message">
+        <!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 [
   {
     task_id: 1,
@@ -163,9 +144,10 @@ output application/json
     created_at: "2023-10-03T09:00:00Z",
     updated_at: "2023-10-03T09:00:00Z"
   }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+&#93; as Array {encoding: "UTF-8", mediaType: "application/json"}&#93;&#93;></ee:set-payload>
             </ee:message>
-        </ee:transform>
+        </ee:transform> [STUDIO] -->
+		<flow-ref doc:name="Flow Reference" doc:id="74c6e2f5-705f-408a-bad5-e0e665deb92e" name="get_all_tasks"/>
     </flow>
     <flow name="get:\task\(id):ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
@@ -173,11 +155,12 @@ output application/json
                 <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
             </ee:variables>
         </ee:transform>
-        <ee:transform doc:name="Transform Message">
+        <flow-ref doc:name="Flow Reference" doc:id="18ecee63-242c-4cfb-9a9c-d93a36db72b0" name="get_task_by_id"/>
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 {
   task_id: 1,
   employee_id: 101,
@@ -186,9 +169,9 @@ output application/json
   priority: "High",
   created_at: "2023-10-01T10:00:00Z",
   updated_at: "2023-10-02T12:00:00Z"
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+} as Object {encoding: "UTF-8", mediaType: "application/json"}&#93;&#93;></ee:set-payload>
             </ee:message>
-        </ee:transform>
+        </ee:transform> [STUDIO] -->
     </flow>
     <flow name="get:\task_comments\(id):ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
@@ -213,16 +196,17 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="post:\task:application\json:ems-tasks-sapi-config">
-        <ee:transform doc:name="Transform Message">
+		<!-- [STUDIO:"Transform Message"]<ee:transform doc:name="Transform Message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
----
+&#45;&#45;-
 {
   task_id: 3
-} as Object {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
+} as Object {encoding: "UTF-8", mediaType: "application/json"}&#93;&#93;></ee:set-payload>
             </ee:message>
-        </ee:transform>
+        </ee:transform> [STUDIO] -->
+		<flow-ref doc:name="Flow Reference" doc:id="a72318c0-8c20-40e1-949b-ba65bd4d37c8" name="new_task"/>
     </flow>
     <flow name="post:\task_comments:application\json:ems-tasks-sapi-config">
         <ee:transform doc:name="Transform Message">
